@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="view_0x">1dp</dimen>
+    <dimen name="view_1x">2dp</dimen>
+    <dimen name="view_2x">4dp</dimen>
+    <dimen name="view_3x">6dp</dimen>
+    <dimen name="view_4x">8dp</dimen>
+    <dimen name="view_5x">10dp</dimen>
+    <dimen name="view_6x">12dp</dimen>
+    <dimen name="view_7x">14dp</dimen>
+    <dimen name="view_8x">16dp</dimen>
+    <dimen name="view_9x">18dp</dimen>
+    <dimen name="view_10x">20dp</dimen>
+    <dimen name="view_11x">22dp</dimen>
+    <dimen name="view_12x">24dp</dimen>
+    <dimen name="view_13x">26dp</dimen>
+    <dimen name="view_14x">28dp</dimen>
+    <dimen name="view_15x">30dp</dimen>
+    <dimen name="view_16x">32dp</dimen>
+    <dimen name="view_17x">34dp</dimen>
+    <dimen name="view_18x">36dp</dimen>
+    <dimen name="view_19x">38dp</dimen>
+    <dimen name="view_20x">40dp</dimen>
+    <dimen name="view_25x">50dp</dimen>
+    <dimen name="view_30x">60dp</dimen>
+    <dimen name="view_60x">70dp</dimen>
+    <dimen name="view_80x">80dp</dimen>
+
+
+    <!--fonts-->
+
+    <dimen name="font_1x">10sp</dimen>
+    <dimen name="font_2x">12sp</dimen>
+    <dimen name="font_3x">14sp</dimen>
+    <dimen name="font_4x">16sp</dimen>
+    <dimen name="font_5x">18sp</dimen>
+    <dimen name="font_6x">20sp</dimen>
+    <dimen name="font_7x">22sp</dimen>
+    <dimen name="font_8x">26sp</dimen>
+    <dimen name="font_9x">30sp</dimen>
+    <dimen name="font_10x">36sp</dimen>
+
+
+    <dimen name="icon_size">48dp</dimen>
+
+
+</resources>
