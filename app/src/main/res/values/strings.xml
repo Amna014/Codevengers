@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">JobVengers</string>
+    <string name="login_now">Login Now</string>
+    <string name="already_have_account">Already Have Account?</string>
+    <string name="where_careers_meet_their_endgame">Where Careers Meet Their Endgame!</string>
+    <string name="Name">Enter Your Name</string>
+    <string name="Email">Enter Your Email</string>
+    <string name="Password">Enter Your Password</string>
+    <string name="Company_Email">Enter Company Email</string>
+    <string name="Company_Name">Enter Company Name</string>
+    <string name="field_of_interest">Field of Interest</string>
 </resources>
