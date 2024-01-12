@@ -34,7 +34,8 @@
             app:cardCornerRadius="@dimen/view_5x"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="parent" >
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -43,10 +44,10 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/appCompatImageView"
                     android:layout_width="@dimen/view_30x"
-                    android:layout_marginTop="@dimen/view_10x"
                     android:layout_height="@dimen/view_30x"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="@dimen/view_10x"
                     android:src="@drawable/employee"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -71,8 +72,8 @@
             app:cardCornerRadius="@dimen/view_5x"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/employeeCard"
-            app:layout_constraintTop_toTopOf="parent" >
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -81,10 +82,10 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/appCompatImageEmployeerView"
                     android:layout_width="@dimen/view_30x"
-                    android:layout_marginTop="@dimen/view_10x"
                     android:layout_height="@dimen/view_30x"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="@dimen/view_10x"
                     android:src="@drawable/employeer"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
