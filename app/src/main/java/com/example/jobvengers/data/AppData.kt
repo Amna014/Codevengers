@@ -5,6 +5,8 @@ data class ApiRequest(
     val userName: String? = null,
     val password: String? = null,
     val email: String? = null,
+    val fieldOfInterest: String? = null,
+    val phoneNo: String? = null,
 )
 
 data class ApiResponse(

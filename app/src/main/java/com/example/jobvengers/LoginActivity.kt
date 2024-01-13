@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity(), Callback<ApiResponse> {
 
                 if (enteredEmail.isNotEmpty() && enteredPassword.isNotEmpty()) {
                     val data = ApiRequest(
-                        action = "ccc",
+                        action = "LOGIN_USER",
                         email = enteredEmail,
                         password = enteredPassword
                     )

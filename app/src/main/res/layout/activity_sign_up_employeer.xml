@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="@color/white"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
 
         <LinearLayout
@@ -15,8 +14,8 @@
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:background="@drawable/card_bg"
-            app:cardCornerRadius="0dp"
             android:orientation="vertical"
+            app:cardCornerRadius="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,13 +34,13 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/urbanist_regular"
             android:text="Where Careers Meet Their Endgame!"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="@dimen/font_6x"
-            android:fontFamily="@font/urbanist_regular"
             android:textStyle="bold"
-            android:layout_marginBottom="30dp"
             app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/linearLayout" />
@@ -50,12 +49,12 @@
             android:id="@+id/appCompatTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/view_10x"
+            android:fontFamily="@font/urbanist_regular"
             android:text="SignUp"
             android:textColor="@color/app_color"
             android:textSize="@dimen/font_10x"
-            android:fontFamily="@font/urbanist_regular"
             android:textStyle="bold"
-            android:layout_marginTop="@dimen/view_10x"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
@@ -65,8 +64,8 @@
             android:id="@+id/mainLinear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_margin="@dimen/view_7x"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
@@ -130,13 +129,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/view_7x"
+            android:layout_marginTop="@dimen/view_10x"
             android:background="@drawable/rounded_corners_button"
             android:backgroundTint="@color/app_color"
             android:padding="@dimen/view_3x"
             android:text="SignUp"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:layout_marginTop="@dimen/view_10x"
             android:textSize="@dimen/font_6x"
             app:layout_constraintStart_toStartOf="@+id/mainLinear"
             app:layout_constraintTop_toBottomOf="@+id/mainLinear" />
