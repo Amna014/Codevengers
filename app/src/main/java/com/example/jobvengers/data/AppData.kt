@@ -2,11 +2,11 @@ package com.example.jobvengers.data
 
 data class ApiRequest(
     val action: String,
-    val userName: String? = null,
+    val username: String? = null,
     val password: String? = null,
     val email: String? = null,
-    val fieldOfInterest: String? = null,
-    val phoneNo: String? = null,
+    val field_Of_interest: ArrayList<String>? = null,
+    val phone_no: String? = null,
 )
 
 data class ApiResponse(

@@ -3,6 +3,7 @@ package com.example.jobvengers
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import com.example.jobvengers.data.ApiRequest
@@ -20,6 +21,8 @@ class SignUpEmployeeActivity : AppCompatActivity(), Callback<ApiResponse> {
     private val retrofitClient = NetworkClient.getNetworkClient()
     private val requestContract: IRequestContact =
         retrofitClient.create(IRequestContact::class.java)
+
+    private val  jobType = arrayListOf("Android","Java")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,11 +43,11 @@ class SignUpEmployeeActivity : AppCompatActivity(), Callback<ApiResponse> {
                 ) {
                     val data = ApiRequest(
                         action = "REGISTER_JOBSEEKER",
-                        userName = editTextName.text.toString(),
+                        username = editTextName.text.toString(),
                         password = editTextPassword.text.toString(),
                         email = editTextEmail.text.toString(),
-                        fieldOfInterest = editTextInterest.text.toString(),
-                        phoneNo = editTetPhoneNumber.text.toString(),
+                        field_Of_interest = jobType,
+                        phone_no = editTetPhoneNumber.text.toString(),
                     )
                     val response = requestContract.makeApiCall(data)
                     response.enqueue(this@SignUpEmployeeActivity)
@@ -77,6 +80,8 @@ class SignUpEmployeeActivity : AppCompatActivity(), Callback<ApiResponse> {
     override fun onResponse(
         call: Call<ApiResponse>, response: Response<ApiResponse>
     ) {
+        Log.d("JobVengerLog",response.body()?.message.toString())
+        Log.d("JobVengerLog",response.body()?.responseCode.toString())
         if (response.body()?.responseCode == 200){
             Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
             val intent = Intent(this@SignUpEmployeeActivity, LoginActivity::class.java)

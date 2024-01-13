@@ -2,6 +2,7 @@ package com.example.jobvengers
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -38,9 +39,10 @@ class SignUpEmployeerActivity : AppCompatActivity(), Callback<ApiResponse> {
                 ) {
                     val data = ApiRequest(
                         action = "REGISTER_EMPLOYER",
-                        userName = editTextName.text.toString(),
+                        username = editTextName.text.toString(),
                         password = editTextPassword.text.toString(),
                         email = editTextEmail.text.toString(),
+                        phone_no = "09090909",
                     )
                     val response = requestContract.makeApiCall(data)
                     response.enqueue(this@SignUpEmployeerActivity)
@@ -71,7 +73,8 @@ class SignUpEmployeerActivity : AppCompatActivity(), Callback<ApiResponse> {
 
     override fun onResponse(
         call: Call<ApiResponse>, response: Response<ApiResponse>
-    ) {
+    ) { Log.d("JobVengerLog",response.body()?.message.toString())
+        Log.d("JobVengerLog",response.body()?.responseCode.toString())
         if (response.body()?.responseCode == 200){
             Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
             val intent = Intent(this@SignUpEmployeerActivity, LoginActivity::class.java)
