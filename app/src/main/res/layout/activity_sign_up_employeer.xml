@@ -126,7 +126,7 @@
 
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnLoginFragment"
+            android:id="@+id/btnSignup_employeer_Fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/view_7x"
@@ -151,7 +151,7 @@
             android:padding="@dimen/view_5x"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnLoginFragment">
+            app:layout_constraintTop_toBottomOf="@+id/btnSignup_employeer_Fragment">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"

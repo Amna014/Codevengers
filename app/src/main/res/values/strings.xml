@@ -9,4 +9,12 @@
     <string name="Company_Email">Enter Company Email</string>
     <string name="Company_Name">Enter Company Name</string>
     <string name="field_of_interest">Field of Interest</string>
+    <string name="Phone_No">Enter Phone Number</string>
+    <string name="create_job">CREATE JOB</string>
+    <string name="Field">Field</string>
+    <string name="Designation">Designation</string>
+    <string name="Experience">Experience</string>
+    <string name="Location">Location</string>
+    <string name="Salary">Salary</string>
+    <string name="job_description">Job Description</string>
 </resources>
