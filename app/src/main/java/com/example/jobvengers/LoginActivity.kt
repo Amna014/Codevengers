@@ -2,28 +2,74 @@ package com.example.jobvengers
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.jobvengers.data.ApiRequest
+import com.example.jobvengers.data.ApiResponse
 import com.example.jobvengers.databinding.ActivityLoginBinding
+import com.example.jobvengers.network.IRequestContact
+import com.example.jobvengers.network.NetworkClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class LoginActivity : AppCompatActivity(), View.OnClickListener {
+class LoginActivity : AppCompatActivity(), Callback<ApiResponse> {
 
     private lateinit var binding: ActivityLoginBinding
+    private val retrofitClient = NetworkClient.getNetworkClient()
+    private val requestContract: IRequestContact =
+        retrofitClient.create(IRequestContact::class.java)
+    // private lateinit var appPreferences: AppPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.signupNow.setOnClickListener(this)
-    }
+        // appPreferences = AppPreferences(this@LoginActivity)
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.signupNow.id -> {
-                val intent = Intent(this, SignUpOptionActivity::class.java)
+        binding.apply {
+            btnLogin.setOnClickListener {
+                val enteredEmail = editTextEmail.text.toString()
+                val enteredPassword = editTextPassword.text.toString()
+
+                if (enteredEmail.isNotEmpty() && enteredPassword.isNotEmpty()) {
+                    val data = ApiRequest(
+                        action = "LOGIN_USER",
+                        email = enteredEmail,
+                        password = enteredPassword
+                    )
+                    val response = requestContract.makeApiCall(data)
+                    response.enqueue(this@LoginActivity)
+                } else {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Please enter both username and password",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            signupNow.setOnClickListener {
+                val intent = Intent(this@LoginActivity, SignUpOptionActivity::class.java)
                 startActivity(intent)
             }
         }
+
+    }
+
+    override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+        if (response.body()?.responseCode != 200) {
+            val intent = Intent(this@LoginActivity, EmployeeDashboardActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else {
+            Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+        Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
     }
 }
