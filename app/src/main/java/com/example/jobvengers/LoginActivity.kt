@@ -2,6 +2,7 @@ package com.example.jobvengers
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.jobvengers.data.ApiRequest
@@ -19,15 +20,11 @@ class LoginActivity : AppCompatActivity(), Callback<ApiResponse> {
     private val retrofitClient = NetworkClient.getNetworkClient()
     private val requestContract: IRequestContact =
         retrofitClient.create(IRequestContact::class.java)
-    // private lateinit var appPreferences: AppPreferences
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // appPreferences = AppPreferences(this@LoginActivity)
 
         binding.apply {
             btnLogin.setOnClickListener {
@@ -36,7 +33,7 @@ class LoginActivity : AppCompatActivity(), Callback<ApiResponse> {
 
                 if (enteredEmail.isNotEmpty() && enteredPassword.isNotEmpty()) {
                     val data = ApiRequest(
-                        action = "LOGIN_USER",
+                        action = "ccc",
                         email = enteredEmail,
                         password = enteredPassword
                     )
@@ -60,11 +57,14 @@ class LoginActivity : AppCompatActivity(), Callback<ApiResponse> {
     }
 
     override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
-        if (response.body()?.responseCode != 200) {
+        Log.d("JobVengerLog",response.body()?.message.toString())
+        Log.d("JobVengerLog",response.body()?.responseCode.toString())
+        if (response.body()?.responseCode == 200){
+            Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
             val intent = Intent(this@LoginActivity, EmployeeDashboardActivity::class.java)
             startActivity(intent)
             finish()
-        } else {
+        }else{
             Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
         }
     }

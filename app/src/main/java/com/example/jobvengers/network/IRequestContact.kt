@@ -7,6 +7,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface IRequestContact {
-    @POST("service.php")
+    @POST("Server.php")
     fun makeApiCall(@Body request: ApiRequest): Call<ApiResponse>
 }
