@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/view_5x">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewJob"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="@dimen/view_10x"
+        app:cardBackgroundColor="@color/light_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageViewCompanyLogo"
+                android:layout_width="@dimen/view_25x"
+                android:layout_height="@dimen/view_25x"
+                android:layout_margin="@dimen/view_5x"
+                android:src="@drawable/ic_home"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewJobType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/view_5x"
+                android:fontFamily="@font/urbanist_bold"
+                android:text="UI/UX Designer"
+                android:textColor="@color/app_color"
+                android:textSize="@dimen/font_5x"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/imageViewCompanyLogo"
+                app:layout_constraintTop_toTopOf="@+id/imageViewCompanyLogo" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/urbanist_bold"
+                android:text="Karachi, Sindh"
+                android:textColor="@color/gray"
+                app:layout_constraintStart_toStartOf="@+id/textViewJobType"
+                app:layout_constraintTop_toBottomOf="@+id/textViewJobType" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/jobDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/view_5x"
+                android:fontFamily="@font/urbanist_regular"
+                android:padding="@dimen/view_5x"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:text="Bachelor’s degree in Computer Science, Experience with .NET technologies including C#, ASP.NET, .NET Core, Web Services, APIs, SQL. Proven analytical and problem-solving skills, highly..... "
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/imageViewCompanyLogo"
+                app:layout_constraintTop_toBottomOf="@+id/textViewLocation" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewSalary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/view_5x"
+                android:layout_marginTop="@dimen/view_5x"
+                android:layout_marginBottom="@dimen/view_5x"
+                android:fontFamily="@font/urbanist_bold"
+                android:text="$1500-2500"
+                android:textSize="@dimen/font_4x"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/jobDescription"
+                app:layout_constraintTop_toBottomOf="@id/jobDescription" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewApplyNow"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/view_5x"
+                android:layout_marginEnd="@dimen/view_20x"
+                app:cardBackgroundColor="@color/app_color"
+                app:cardCornerRadius="@dimen/view_5x"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/jobDescription">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/textViewApplyNow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/urbanist_regular"
+                        android:padding="@dimen/view_2x"
+                        android:text="Apply Now"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_3x" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
