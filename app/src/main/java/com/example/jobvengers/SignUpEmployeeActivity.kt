@@ -42,7 +42,7 @@ class SignUpEmployeeActivity : AppCompatActivity(), Callback<ApiResponse> {
                     )
                 ) {
                     val data = ApiRequest(
-                        action = "REGISTER_JOBSEEKER",
+                        action = "REGISTER_USER ",
                         username = editTextName.text.toString(),
                         password = editTextPassword.text.toString(),
                         email = editTextEmail.text.toString(),
