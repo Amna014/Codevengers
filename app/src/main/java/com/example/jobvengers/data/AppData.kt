@@ -16,4 +16,13 @@ data class ApiResponse(
     val userID: Long? = null,
     val username: String? = null,
     val email: String? = null,
+    val jobs: ArrayList<Jobs>? = null,
+)
+
+data class Jobs(
+    val jobId: String? = null,
+    val jobType: String? = null,
+    val location: String? = null,
+    val description: String? = null,
+    val salary: String? = null,
 )

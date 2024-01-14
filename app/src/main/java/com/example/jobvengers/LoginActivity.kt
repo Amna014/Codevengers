@@ -28,7 +28,11 @@ class LoginActivity : AppCompatActivity(), Callback<ApiResponse> {
 
         binding.apply {
             btnLogin.setOnClickListener {
-                val enteredEmail = editTextEmail.text.toString()
+
+                val intent = Intent(this@LoginActivity, EmployeeDashboardActivity::class.java)
+                startActivity(intent)
+
+              /*  val enteredEmail = editTextEmail.text.toString()
                 val enteredPassword = editTextPassword.text.toString()
 
                 if (enteredEmail.isNotEmpty() && enteredPassword.isNotEmpty()) {
@@ -45,7 +49,7 @@ class LoginActivity : AppCompatActivity(), Callback<ApiResponse> {
                         "Please enter both username and password",
                         Toast.LENGTH_SHORT
                     ).show()
-                }
+                }*/
             }
 
             signupNow.setOnClickListener {

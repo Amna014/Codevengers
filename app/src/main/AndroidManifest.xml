@@ -4,6 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <queries>
+        <package android:name="com.whatsapp" />
+    </queries>
+
 
     <application
         android:allowBackup="true"

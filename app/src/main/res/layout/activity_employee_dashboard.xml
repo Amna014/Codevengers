@@ -64,6 +64,7 @@
                 app:cardCornerRadius="@dimen/view_5x">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/btnJobs"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center">
@@ -104,6 +105,7 @@
                 app:cardCornerRadius="@dimen/view_5x">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/btnUser"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center">
@@ -134,12 +136,12 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:clipToPadding="false"
         tools:listitem="@layout/item_job"
         android:scrollbars="vertical"
@@ -156,28 +158,30 @@
 
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/appCompatImageView3"
+            android:id="@+id/btnHome"
             android:layout_width="@dimen/view_25x"
             android:layout_height="@dimen/view_25x"
             android:layout_marginVertical="@dimen/view_5x"
             android:layout_marginStart="@dimen/view_10x"
             android:src="@drawable/ic_home"
+            android:tint="@color/app_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="@dimen/view_25x"
-            android:layout_height="@dimen/view_25x"
+            android:id="@+id/btn_chat"
+            android:layout_width="@dimen/view_20x"
+            android:layout_height="@dimen/view_20x"
             android:layout_marginVertical="@dimen/view_5x"
             android:src="@drawable/ic_chat"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/appCompatImageView4"
-            app:layout_constraintStart_toEndOf="@+id/appCompatImageView3"
+            app:layout_constraintEnd_toStartOf="@+id/btnProfile"
+            app:layout_constraintStart_toEndOf="@+id/btnHome"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/appCompatImageView4"
+            android:id="@+id/btnProfile"
             android:layout_width="@dimen/view_25x"
             android:layout_height="@dimen/view_25x"
             android:layout_marginVertical="@dimen/view_5x"
