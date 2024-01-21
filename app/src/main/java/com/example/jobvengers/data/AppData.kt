@@ -8,15 +8,21 @@ data class ApiRequest(
     val username: String? = null,
     val password: String? = null,
     val email: String? = null,
+    val user_id: Int? = null,
     val employer_id: Int? = null,
+    val job_seeker_id: Int? = null,
+    val job_id: Int? = null,
     val field_Of_interest: ArrayList<String>? = null,
     val phone_no: String? = null,
     val title: String? = null,
+    val cv: String? = null,
     val designation: String? = null,
     val experience_required: String? = null,
+    val experience: String? = null,
     val description: String? = null,
     val location: String? = null,
     val salary: Double? = null,
+    val expected_salary: String? = null,
 )
 
 data class ApiResponse(
@@ -30,7 +36,7 @@ data class ApiResponse(
 
 @Parcelize
 data class Jobs(
-    val jobId: String? = null,
+    val job_id: String? = null,
     val title: String? = null,
     val location: String? = null,
     val description: String? = null,

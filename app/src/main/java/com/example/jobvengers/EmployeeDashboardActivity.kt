@@ -81,11 +81,8 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
                 openWhatsAppSendToScreen()
             }
             btnProfile.setOnClickListener {
-                appPreferences.clearUserId()
-                appPreferences.clearUserType()
-                val intent = Intent(this@EmployeeDashboardActivity, LoginActivity::class.java)
+                val intent = Intent(this@EmployeeDashboardActivity, UserProfile::class.java)
                 startActivity(intent)
-                finish()
             }
             more.setOnClickListener {
 
@@ -115,7 +112,7 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
     }
 
     private fun setJobRecyclerView(dataList: List<Jobs>?) {
-        jobAdapter = JobListingAdapter(dataList ?: arrayListOf())
+        jobAdapter = JobListingAdapter(appPreferences.getUserType().toString(),appPreferences.getUserId().toInt(),dataList ?: arrayListOf())
         binding.recyclerView.adapter = jobAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
     }

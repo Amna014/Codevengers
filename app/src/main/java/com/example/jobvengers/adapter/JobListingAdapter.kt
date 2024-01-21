@@ -2,13 +2,17 @@ package com.example.jobvengers.adapter
 
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.jobvengers.ApplyJobActivity
 import com.example.jobvengers.JobDetails
 import com.example.jobvengers.data.Jobs
 import com.example.jobvengers.databinding.ItemJobBinding
 
 class JobListingAdapter(
+    private val userType:String,
+    private val userId:Int,
     private val dataList: List<Jobs>,
 ) : RecyclerView.Adapter<JobListingAdapter.ViewHolder>() {
 
@@ -24,6 +28,12 @@ class JobListingAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = dataList[position]
         holder.binding.apply {
+
+
+            if (userType == "employer"){
+                applyNow.visibility = View.GONE
+            }
+
             textViewJobType.text = data.title
             textViewLocation.text = data.location
             jobDescription.text = data.description
@@ -32,6 +42,13 @@ class JobListingAdapter(
             cardViewJob.setOnClickListener {
                 val intent = Intent(cardViewJob.context, JobDetails::class.java)
                 intent.putExtra("Jobs", data)
+                cardViewJob.context.startActivity(intent)
+            }
+
+            applyNow.setOnClickListener {
+                val intent = Intent(cardViewJob.context, ApplyJobActivity::class.java)
+                intent.putExtra("userId", userId)
+                intent.putExtra("JobID", data.job_id)
                 cardViewJob.context.startActivity(intent)
             }
 
