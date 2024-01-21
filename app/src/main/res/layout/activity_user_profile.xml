@@ -14,13 +14,30 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="100dp"
             android:background="@drawable/card_bg"
             app:cardCornerRadius="0dp"
+            android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" >
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_8x"
+                android:fontFamily="@font/urbanist_regular"
+                android:textStyle="bold"
+                android:layout_marginBottom="30dp"
+                app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout" />
+
 
         </LinearLayout>
 
@@ -43,6 +60,7 @@
                 android:background="@drawable/background_edit_text"
                 android:padding="@dimen/view_3x"
                 android:text=""
+                android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_8x"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -54,6 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
+                android:gravity="center"
                 android:background="@drawable/background_edit_text"
                 android:padding="@dimen/view_3x"
                 android:text=""
@@ -70,7 +89,8 @@
                 android:layout_marginTop="7dp"
                 android:background="@drawable/background_edit_text"
                 android:padding="@dimen/view_3x"
-                android:text=""
+                android:text="Developer"
+                android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_8x"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -83,14 +103,14 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             app:layout_constraintBottom_toTopOf="@+id/mainLinear"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="60dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:src="@drawable/ic_home" />
 
 
         <androidx.appcompat.widget.AppCompatButton
