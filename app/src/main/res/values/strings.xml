@@ -17,4 +17,6 @@
     <string name="Location">Location</string>
     <string name="Salary">Salary</string>
     <string name="job_description">Job Description</string>
+    <string name="job_details">JOB DETAILS</string>
+    <string name="jobdescription">Job Description</string>
 </resources>
