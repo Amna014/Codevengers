@@ -38,11 +38,10 @@ class SignUpEmployeerActivity : AppCompatActivity(), Callback<ApiResponse> {
                     )
                 ) {
                     val data = ApiRequest(
-                        action = "REGISTER_USER ",
+                        action = "REGISTER_EMPLOYER",
                         username = editTextName.text.toString(),
                         password = editTextPassword.text.toString(),
                         email = editTextEmail.text.toString(),
-                        phone_no = "09090909",
                     )
                     val response = requestContract.makeApiCall(data)
                     response.enqueue(this@SignUpEmployeerActivity)

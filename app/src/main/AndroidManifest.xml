@@ -46,6 +46,9 @@
             android:name=".SignUpEmployeeActivity"
             android:exported="false" />
         <activity
+            android:name=".JobDetails"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true" >
             <intent-filter>

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/view_5x">
 
@@ -49,19 +49,20 @@
                 android:fontFamily="@font/urbanist_bold"
                 android:text="Karachi, Sindh"
                 android:textColor="@color/gray"
+                app:layout_constraintBottom_toBottomOf="@+id/imageViewCompanyLogo"
                 app:layout_constraintStart_toStartOf="@+id/textViewJobType"
                 app:layout_constraintTop_toBottomOf="@+id/textViewJobType" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/jobDescription"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/view_5x"
                 android:fontFamily="@font/urbanist_regular"
                 android:padding="@dimen/view_5x"
                 android:maxLines="3"
                 android:ellipsize="end"
-                android:text="Bachelor’s degree in Computer Science, Experience with .NET technologies including C#, ASP.NET, .NET Core, Web Services, APIs, SQL. Proven analytical and problem-solving skills, highly..... "
+                android:text="Bachelor"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/imageViewCompanyLogo"

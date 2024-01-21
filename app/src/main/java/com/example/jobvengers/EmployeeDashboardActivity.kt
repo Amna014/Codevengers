@@ -14,6 +14,7 @@ import com.example.jobvengers.adapter.UserListingAdapter
 import com.example.jobvengers.data.ApiRequest
 import com.example.jobvengers.data.ApiResponse
 import com.example.jobvengers.data.Jobs
+import com.example.jobvengers.data.User
 import com.example.jobvengers.databinding.ActivityEmployeeDashboardBinding
 import com.example.jobvengers.network.IRequestContact
 import com.example.jobvengers.network.NetworkClient
@@ -27,6 +28,8 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
     private val retrofitClient = NetworkClient.getNetworkClient()
     private val requestContract: IRequestContact =
         retrofitClient.create(IRequestContact::class.java)
+    private lateinit var appPreferences: AppPreferences
+
 
     private lateinit var jobAdapter: JobListingAdapter
     private lateinit var userAdapter: UserListingAdapter
@@ -35,8 +38,11 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
         binding = ActivityEmployeeDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setJobRecyclerView(generateDummyJobs(10))
-        //getAllJobs()
+        appPreferences = AppPreferences(this)
+
+
+        //setJobRecyclerView(getAllJobs(10))
+        getAllJobs()
 
         binding.apply {
             btnJobs.setOnClickListener {
@@ -52,8 +58,7 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
                         R.color.app_color
                     )
                 )
-                setJobRecyclerView(generateDummyJobs(10))
-                // getAllJobs()
+                getAllJobs()
             }
             btnUser.setOnClickListener {
                 btnJobs.setBackgroundColor(
@@ -68,17 +73,19 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
                         R.color.app_color
                     )
                 )
-                setUserRecyclerView(generateDummyUsers(10))
-                //getAllUser()
+                getAllUser()
             }
             btnHome.setOnClickListener {
-
             }
             btnChat.setOnClickListener {
                 openWhatsAppSendToScreen()
             }
             btnProfile.setOnClickListener {
-
+                appPreferences.clearUserId()
+                appPreferences.clearUserType()
+                val intent = Intent(this@EmployeeDashboardActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
             }
             more.setOnClickListener {
 
@@ -101,7 +108,7 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
 
     private fun getAllUser() {
         val data = ApiRequest(
-            action = "GET_ALL_USER",
+            action = "GET_ALL_JOB_SEEKERS",
         )
         val response = requestContract.makeApiCall(data)
         response.enqueue(this@EmployeeDashboardActivity)
@@ -113,7 +120,7 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun setUserRecyclerView(dataList: List<ApiResponse>?) {
+    private fun setUserRecyclerView(dataList: List<User>?) {
         userAdapter = UserListingAdapter(dataList ?: arrayListOf())
         binding.recyclerView.adapter = userAdapter
         binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
@@ -131,45 +138,17 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
         }
     }
 
-    private fun generateDummyJobs(count: Int): List<Jobs> {
-        val dummyJobs = ArrayList<Jobs>()
-
-        for (i in 1..count) {
-            dummyJobs.add(
-                Jobs(
-                    jobId = "Job$i",
-                    jobType = "Job Type $i",
-                    location = "Location $i",
-                    description = "Description for Job $i. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                    salary = "$${i}000 - $${i}999"
-                )
-            )
-        }
-
-        return dummyJobs
-    }
-    private fun generateDummyUsers(count: Int): List<ApiResponse> {
-        val dummyJobs = ArrayList<ApiResponse>()
-
-        for (i in 1..count) {
-            dummyJobs.add(
-                ApiResponse(
-                    message = "",
-                    status = true,
-                    responseCode = 0,
-                    username = "Job Type $i",
-                )
-            )
-        }
-
-        return dummyJobs
-    }
 
     override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
         Log.d("JobVengerLog", response.body()?.message.toString())
         Log.d("JobVengerLog", response.body()?.responseCode.toString())
         if (response.body()?.responseCode == 200) {
-            setJobRecyclerView(response.body()?.jobs)
+            if (response.body()?.jobs?.isNotEmpty() == true) {
+                setJobRecyclerView(response.body()?.jobs)
+            }
+            if (response.body()?.data?.isNotEmpty() == true) {
+                setUserRecyclerView(response.body()?.data)
+            }
         } else {
             Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
         }
