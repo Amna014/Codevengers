@@ -13,7 +13,7 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="100dp"
             android:background="@drawable/card_bg"
             app:cardCornerRadius="0dp"
             android:orientation="vertical"
@@ -174,8 +174,10 @@
             android:textSize="@dimen/font_6x"
             app:layout_constraintStart_toStartOf="@+id/mainLinear"
             app:layout_constraintTop_toBottomOf="@+id/mainLinear" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
 
 </layout>

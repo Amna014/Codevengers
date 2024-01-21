@@ -36,7 +36,7 @@ import retrofit2.Response
 
                 if (enteredEmail.isNotEmpty() && enteredPassword.isNotEmpty()) {
                     val data = ApiRequest(
-                        action = "LOGIN_USER",
+                        action = "LOGIN",
                         email = enteredEmail,
                         password = enteredPassword
                     )
@@ -49,10 +49,10 @@ import retrofit2.Response
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                signupNow.setOnClickListener {
-                    val intent = Intent(this@LoginActivity, SignUpOptionActivity::class.java)
-                    startActivity(intent)
-                }
+            }
+            signupNow.setOnClickListener {
+                val intent = Intent(this@LoginActivity, SignUpOptionActivity::class.java)
+                startActivity(intent)
             }
         }}
 
@@ -60,10 +60,19 @@ import retrofit2.Response
          Log.d("JobVengerLog",response.body()?.message.toString())
          Log.d("JobVengerLog",response.body()?.responseCode.toString())
          if (response.body()?.responseCode == 200){
+             appPreferences.saveUserId(response.body()?.user?.id)
+             appPreferences.saveUserType(response.body()?.user?.userType.toString())
              Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
-             val intent = Intent(this@LoginActivity, EmployeeDashboardActivity::class.java)
-             startActivity(intent)
-             finish()
+             if (appPreferences.getUserId().toInt() > 0 && appPreferences.getUserType() == "job_seeker") {
+                 val intent = Intent(this, EmployeeDashboardActivity::class.java)
+                 startActivity(intent)
+                 finish()
+             }
+             if (appPreferences.getUserId().toInt() > 0 && appPreferences.getUserType() == "employer") {
+                 val intent = Intent(this, EmployerDashboardActivity::class.java)
+                 startActivity(intent)
+                 finish()
+             }
          }else{
              Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
          }
