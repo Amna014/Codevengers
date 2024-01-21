@@ -14,22 +14,23 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LoginActivity : AppCompatActivity(), Callback<ApiResponse> {
+ class LoginActivity : AppCompatActivity(), Callback<ApiResponse> {
 
     private lateinit var binding: ActivityLoginBinding
     private val retrofitClient = NetworkClient.getNetworkClient()
     private val requestContract: IRequestContact =
         retrofitClient.create(IRequestContact::class.java)
+    private lateinit var appPreferences: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        appPreferences = AppPreferences(this)
+
         binding.apply {
             btnLogin.setOnClickListener {
-
-
                 val enteredEmail = editTextEmail.text.toString()
                 val enteredPassword = editTextPassword.text.toString()
 
@@ -48,30 +49,27 @@ class LoginActivity : AppCompatActivity(), Callback<ApiResponse> {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+                signupNow.setOnClickListener {
+                    val intent = Intent(this@LoginActivity, SignUpOptionActivity::class.java)
+                    startActivity(intent)
+                }
             }
+        }}
 
-            signupNow.setOnClickListener {
-                val intent = Intent(this@LoginActivity, SignUpOptionActivity::class.java)
-                startActivity(intent)
-            }
-        }
+     override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+         Log.d("JobVengerLog",response.body()?.message.toString())
+         Log.d("JobVengerLog",response.body()?.responseCode.toString())
+         if (response.body()?.responseCode == 200){
+             Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
+             val intent = Intent(this@LoginActivity, EmployeeDashboardActivity::class.java)
+             startActivity(intent)
+             finish()
+         }else{
+             Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
+         }
+     }
 
-    }
-
-    override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
-        Log.d("JobVengerLog",response.body()?.message.toString())
-        Log.d("JobVengerLog",response.body()?.responseCode.toString())
-        if (response.body()?.responseCode == 200){
-            Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
-            val intent = Intent(this@LoginActivity, EmployeeDashboardActivity::class.java)
-            startActivity(intent)
-            finish()
-        }else{
-            Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-        Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
-    }
-}
+     override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+         Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
+     }
+ }
