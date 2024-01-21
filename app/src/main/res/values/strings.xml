@@ -19,4 +19,8 @@
     <string name="job_description">Job Description</string>
     <string name="job_details">JOB DETAILS</string>
     <string name="jobdescription">Job Description</string>
+    <string name="apply_job">APPLY JOB</string>
+    <string name="email">Email</string>
+    <string name="phoneno">PhoneNo</string>
+    <string name="expectedsalary">ExpectedSalary</string>
 </resources>
