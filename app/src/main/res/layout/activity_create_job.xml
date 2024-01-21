@@ -174,8 +174,10 @@
             android:textSize="@dimen/font_6x"
             app:layout_constraintStart_toStartOf="@+id/mainLinear"
             app:layout_constraintTop_toBottomOf="@+id/mainLinear" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
 
 </layout>
