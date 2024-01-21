@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="200dp"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/view_2x">
 
@@ -33,9 +33,10 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/nameTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/view_5x"
+                android:gravity="center"
                 android:fontFamily="@font/urbanist_bold"
                 android:text="Uzair Pirwani"
                 android:textSize="@dimen/font_4x"
@@ -45,9 +46,10 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/designationTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/view_3x"
+                android:gravity="center"
                 android:fontFamily="@font/urbanist_bold"
                 android:text="Android Developer"
                 android:textSize="@dimen/font_4x"
@@ -58,14 +60,13 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/connectCardView"
-                android:layout_width="110dp"
+                android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_margin="@dimen/view_10x"
                 app:cardBackgroundColor="@color/app_color"
                 app:cardCornerRadius="@dimen/view_5x"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/designationTextView"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/chatIconImageView"
                 app:layout_constraintTop_toBottomOf="@id/designationTextView">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -94,8 +95,9 @@
                 android:src="@drawable/ic_chat"
                 app:layout_constraintBottom_toBottomOf="@+id/connectCardView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/connectCardView"
                 app:layout_constraintTop_toTopOf="@+id/connectCardView" />
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
