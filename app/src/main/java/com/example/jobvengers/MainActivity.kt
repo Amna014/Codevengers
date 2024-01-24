@@ -17,8 +17,6 @@ class MainActivity : AppCompatActivity() {
 
         appPreferences = AppPreferences(this)
 
-        Toast.makeText(this, appPreferences.getUserId().toString(), Toast.LENGTH_SHORT).show()
-
         Handler(Looper.getMainLooper()).postDelayed({
             if (appPreferences.getUserId()
                 .toInt() > 0 && appPreferences.getUserType() == "job_seeker"
