@@ -2,9 +2,9 @@ package com.example.jobvengers
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.jobvengers.data.ApiRequest
@@ -21,10 +21,11 @@ class ApplyJobActivity : AppCompatActivity(), Callback<ApiResponse> {
     private lateinit var binding: ActivityApplyJobBinding
     private lateinit var appPreferences: AppPreferences
     private var jobId: String? = ""
+    private var path: String? = ""
     private val retrofitClient = NetworkClient.getNetworkClient()
     private val requestContract: IRequestContact =
         retrofitClient.create(IRequestContact::class.java)
-    private val PICK_FILE_REQUEST_CODE = 123
+    private val FILE_PICKER_REQUEST_CODE = 123
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +35,6 @@ class ApplyJobActivity : AppCompatActivity(), Callback<ApiResponse> {
 
         jobId = intent.getStringExtra("JobID")
         appPreferences = AppPreferences(this)
-
-        showToast(jobId.toString())
-        showToast(appPreferences.getUserId().toString())
 
         binding.apply {
 
@@ -59,44 +57,32 @@ class ApplyJobActivity : AppCompatActivity(), Callback<ApiResponse> {
                     applyJob(editEmail, experience, editPhone, salary)
                 }
 
-               imageViewPlusSign.setOnClickListener{
-                   openFilePicker()
-               }
+           }
+
+            imageViewPlusSign.setOnClickListener {
+                openPdfFilePicker()
             }
         }
 
 
     }
 
-    @Deprecated("Deprecated in Java")
+    private fun openPdfFilePicker() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "application/pdf"
+        startActivityForResult(intent, FILE_PICKER_REQUEST_CODE)
+    }
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.data?.let { uri ->
-                val fileType = getFileType(uri)
-                showToast("Selected file type: $fileType")
+                binding.imageViewPdf.visibility = View.VISIBLE
+                path = uri.path
             }
-        }
-    }
-
-    private fun openFilePicker() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        intent.type = "*/*"
-
-        startActivityForResult(intent, PICK_FILE_REQUEST_CODE)
-    }
-    private fun getFileType(uri: Uri): String {
-        val contentResolver = contentResolver
-        val mimeType = contentResolver.getType(uri)
-
-        return when {
-            mimeType?.contains("pdf") == true -> "PDF"
-            mimeType?.contains("spreadsheetml") == true -> "Excel"
-            mimeType?.contains("wordprocessingml") == true -> "Word"
-            mimeType?.contains("presentationml") == true -> "PowerPoint"
-            else -> "Unknown"
         }
     }
 
@@ -115,7 +101,7 @@ class ApplyJobActivity : AppCompatActivity(), Callback<ApiResponse> {
             experience = experience,
             phone_no = editPhone,
             expected_salary = salary,
-            cv = "path/to/cv.pdf"
+            cv = path
         )
         val response = requestContract.makeApiCall(data)
         response.enqueue(this@ApplyJobActivity)

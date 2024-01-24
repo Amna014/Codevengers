@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
             if (appPreferences.getUserId()
                 .toInt() > 0 && appPreferences.getUserType() == "job_seeker"
             ) {
-                Toast.makeText(this, "Job_seeker", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, EmployeeDashboardActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -31,13 +30,11 @@ class MainActivity : AppCompatActivity() {
             if (appPreferences.getUserId()
                 .toInt() > 0 && appPreferences.getUserType() == "employer"
             ) {
-                Toast.makeText(this, "employer", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, EmployerDashboardActivity::class.java)
                 startActivity(intent)
                 finish()
             }
             if (appPreferences.getUserId().toInt() == 0) {
-                Toast.makeText(this, "Login", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()

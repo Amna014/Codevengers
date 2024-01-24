@@ -36,9 +36,6 @@ class AppliedApplicantsActivity : AppCompatActivity(), Callback<ApiResponse> {
         jobId = intent.getStringExtra("JobID")
         appPreferences = AppPreferences(this)
 
-        Toast.makeText(this, appPreferences.getUserId().toInt().toString(), Toast.LENGTH_SHORT).show()
-        Toast.makeText(this, jobId.toString(), Toast.LENGTH_SHORT).show()
-
         getAllAppliedApplicants()
 
     }
