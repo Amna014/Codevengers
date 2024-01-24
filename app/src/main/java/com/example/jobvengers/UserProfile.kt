@@ -54,11 +54,12 @@ class UserProfile : AppCompatActivity(), Callback<ApiResponse> {
     override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
         Log.d("JobVengerLog", response.body()?.message.toString())
         Log.d("JobVengerLog", response.body()?.responseCode.toString())
+        Log.d("JobVengerLog", response.body()?.employee.toString())
         if (response.body()?.responseCode == 200) {
             binding.apply {
                 Name.text = response.body()?.employee?.username
                 Email.text = response.body()?.employee?.email
-                Position.text = response.body()?.employee?.field_of_interest
+                Position.text = response.body()?.employee?.field_of_interest ?: "Android"
             }
         } else {
             if (!isFinishing) {
