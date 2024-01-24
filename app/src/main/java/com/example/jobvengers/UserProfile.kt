@@ -58,13 +58,18 @@ class UserProfile : AppCompatActivity(), Callback<ApiResponse> {
             binding.apply {
                 Name.text = response.body()?.user?.username
                 Email.text = response.body()?.user?.email
+                Position.text = response.body()?.user?.field_Of_interest?.first() ?: "Developer"
             }
         } else {
-            Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
+            if (!isFinishing) {
+                Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-        Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
+        if (!isFinishing) {
+            Toast.makeText(this, t.message, Toast.LENGTH_SHORT).show()
+        }
     }
 }

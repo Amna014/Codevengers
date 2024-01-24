@@ -114,7 +114,7 @@ class EmployerDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
 
     private fun getAllApplicants() {
         val data = ApiRequest(
-            action = "GET_APPLIED_USERS",
+            action = "GET_ALL_APPLIED_USERS",
             employer_id = appPreferences.getUserId().toInt()
         )
         val response = requestContract.makeApiCall(data)

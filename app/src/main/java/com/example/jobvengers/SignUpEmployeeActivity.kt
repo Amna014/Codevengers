@@ -46,7 +46,7 @@ class SignUpEmployeeActivity : AppCompatActivity(), Callback<ApiResponse> {
                         username = editTextName.text.toString(),
                         password = editTextPassword.text.toString(),
                         email = editTextEmail.text.toString(),
-                        field_Of_interest = jobType,
+                        field_Of_interest = arrayListOf("Banking"),
                         phone_no = editTetPhoneNumber.text.toString(),
                     )
                     val response = requestContract.makeApiCall(data)

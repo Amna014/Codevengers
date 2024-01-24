@@ -14,6 +14,8 @@ data class ApiRequest(
     val job_id: Int? = null,
     val field_Of_interest: ArrayList<String>? = null,
     val phone_no: String? = null,
+    val sender_id: Int? = null,
+    val receiver_id: Int? = null,
     val title: String? = null,
     val cv: String? = null,
     val designation: String? = null,
@@ -32,6 +34,12 @@ data class ApiResponse(
     val user: User? = null,
     val jobs: ArrayList<Jobs>? = null,
     val data: ArrayList<User>? = null,
+    val applied_users: AppliedUserData,
+)
+
+data class AppliedUserData(
+    val appliedUsersCount: Int,
+    val users: ArrayList<User>? = null,
 )
 
 @Parcelize
@@ -41,14 +49,17 @@ data class Jobs(
     val location: String? = null,
     val description: String? = null,
     val designation: String? = null,
-    val salary: String? = null
+    val salary: String? = null,
+    val applied_count: Int? = null,
 ) : Parcelable
 
 data class User(
     val id: Long? = null,
+    val job_seeker_id: Long? = null,
     val userType: String? = null,
     val username: String? = null,
     val email: String? = null,
     val phone_no: String? = null,
     val field_Of_interest: ArrayList<String>? = null,
+    val connection_status: String? = null,
 )

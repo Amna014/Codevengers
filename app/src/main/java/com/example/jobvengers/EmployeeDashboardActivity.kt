@@ -10,6 +10,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jobvengers.adapter.JobListingAdapter
+import com.example.jobvengers.adapter.SendConnection
 import com.example.jobvengers.adapter.UserListingAdapter
 import com.example.jobvengers.data.ApiRequest
 import com.example.jobvengers.data.ApiResponse
@@ -33,6 +34,9 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
 
     private lateinit var jobAdapter: JobListingAdapter
     private lateinit var userAdapter: UserListingAdapter
+    private var selectedTab: String = "Jobs"
+    private var users: ArrayList<User> = arrayListOf()
+    private var jobs: ArrayList<Jobs> = arrayListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEmployeeDashboardBinding.inflate(layoutInflater)
@@ -41,36 +45,33 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
         appPreferences = AppPreferences(this)
 
 
-        //setJobRecyclerView(getAllJobs(10))
         getAllJobs()
 
         binding.apply {
             btnJobs.setOnClickListener {
+                selectedTab = "Jobs"
                 btnUser.setBackgroundColor(
                     ContextCompat.getColor(
-                        this@EmployeeDashboardActivity,
-                        R.color.gray
+                        this@EmployeeDashboardActivity, R.color.gray
                     )
                 )
                 btnJobs.setBackgroundColor(
                     ContextCompat.getColor(
-                        this@EmployeeDashboardActivity,
-                        R.color.app_color
+                        this@EmployeeDashboardActivity, R.color.app_color
                     )
                 )
                 getAllJobs()
             }
             btnUser.setOnClickListener {
+                selectedTab = "Users"
                 btnJobs.setBackgroundColor(
                     ContextCompat.getColor(
-                        this@EmployeeDashboardActivity,
-                        R.color.gray
+                        this@EmployeeDashboardActivity, R.color.gray
                     )
                 )
                 btnUser.setBackgroundColor(
                     ContextCompat.getColor(
-                        this@EmployeeDashboardActivity,
-                        R.color.app_color
+                        this@EmployeeDashboardActivity, R.color.app_color
                     )
                 )
                 getAllUser()
@@ -88,6 +89,36 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
 
             }
             search.doOnTextChanged { text, _, _, _ ->
+                if (selectedTab == "Users") {
+                    val searchQuery = text?.toString()?.trim()
+                    val allUser: List<User> = users
+                    val filteredUsers = if (!searchQuery.isNullOrBlank()) {
+                        allUser.filter {
+                            it.username?.contains(
+                                searchQuery, ignoreCase = true
+                            ) == true
+                        }
+                    } else {
+                        allUser
+                    }
+                    setUserRecyclerView(filteredUsers)
+                }
+                if (selectedTab == "Jobs") {
+                    val searchQuery = text?.toString()?.trim()
+                    val allJobs: List<Jobs> = jobs
+                    Log.d("oiusodus", allJobs.toString())
+
+                    val filteredJobs = if (!searchQuery.isNullOrBlank()) {
+                        allJobs.filter {
+                            it.title?.contains(
+                                searchQuery, ignoreCase = true
+                            ) == true
+                        }
+                    } else {
+                        allJobs
+                    }
+                    setJobRecyclerView(filteredJobs)
+                }
 
             }
         }
@@ -118,7 +149,20 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
     }
 
     private fun setUserRecyclerView(dataList: List<User>?) {
-        userAdapter = UserListingAdapter(dataList ?: arrayListOf())
+        userAdapter = UserListingAdapter(dataList ?: arrayListOf(), object : SendConnection {
+            override fun sendConnection(id: Int) {
+                Toast.makeText(this@EmployeeDashboardActivity, id.toString(), Toast.LENGTH_SHORT)
+                    .show()
+                val data = ApiRequest(
+                    action = "SEND_CONNECTION_REQUEST",
+                    sender_id = appPreferences.getUserId().toInt(),
+                    receiver_id = id,
+                )
+                val response = requestContract.makeApiCall(data)
+                response.enqueue(this@EmployeeDashboardActivity)
+            }
+
+        })
         binding.recyclerView.adapter = userAdapter
         binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
     }
@@ -141,10 +185,12 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
         Log.d("JobVengerLog", response.body()?.responseCode.toString())
         if (response.body()?.responseCode == 200) {
             if (response.body()?.jobs?.isNotEmpty() == true) {
+                jobs = response.body()?.jobs ?: arrayListOf()
                 setJobRecyclerView(response.body()?.jobs)
             }
             if (response.body()?.data?.isNotEmpty() == true) {
                 setUserRecyclerView(response.body()?.data)
+                users = response.body()?.data ?: arrayListOf()
             }
         } else {
             Toast.makeText(this, response.body()?.message, Toast.LENGTH_SHORT).show()

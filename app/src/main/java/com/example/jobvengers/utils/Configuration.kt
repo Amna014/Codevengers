@@ -2,6 +2,6 @@ package com.example.jobvengers.utils
 
 object Configuration {
 
-    const val Base_URL = "http://192.168.1.115:4433/Jobvengerapp/"
+    const val Base_URL = "https://ef76-202-47-49-155.ngrok-free.app/Jobvengerapp/"
 
 }

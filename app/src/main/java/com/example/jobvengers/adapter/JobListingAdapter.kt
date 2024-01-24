@@ -4,7 +4,9 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.jobvengers.AppliedApplicantsActivity
 import com.example.jobvengers.ApplyJobActivity
 import com.example.jobvengers.JobDetails
 import com.example.jobvengers.data.Jobs
@@ -29,9 +31,10 @@ class JobListingAdapter(
         val data = dataList[position]
         holder.binding.apply {
 
-
             if (userType == "employer"){
                 applyNow.visibility = View.GONE
+                cardViewNoOfApplicants.visibility = View.VISIBLE
+                textViewNoOfApplicants.text = "No of Applicants: " + data.applied_count?.toString()
             }
 
             textViewJobType.text = data.title
@@ -50,6 +53,13 @@ class JobListingAdapter(
                 intent.putExtra("userId", userId)
                 intent.putExtra("JobID", data.job_id)
                 cardViewJob.context.startActivity(intent)
+            }
+
+            seeAllApplicants.setOnClickListener {
+                val intent = Intent(seeAllApplicants.context, AppliedApplicantsActivity::class.java)
+                intent.putExtra("userId", userId)
+                intent.putExtra("JobID", data.job_id)
+                seeAllApplicants.context.startActivity(intent)
             }
 
         }

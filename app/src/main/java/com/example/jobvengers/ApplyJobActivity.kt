@@ -1,5 +1,8 @@
 package com.example.jobvengers
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -21,6 +24,8 @@ class ApplyJobActivity : AppCompatActivity(), Callback<ApiResponse> {
     private val retrofitClient = NetworkClient.getNetworkClient()
     private val requestContract: IRequestContact =
         retrofitClient.create(IRequestContact::class.java)
+    private val PICK_FILE_REQUEST_CODE = 123
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +58,48 @@ class ApplyJobActivity : AppCompatActivity(), Callback<ApiResponse> {
                 } else {
                     applyJob(editEmail, experience, editPhone, salary)
                 }
+
+               imageViewPlusSign.setOnClickListener{
+                   openFilePicker()
+               }
             }
         }
 
 
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { uri ->
+                val fileType = getFileType(uri)
+                showToast("Selected file type: $fileType")
+            }
+        }
+    }
+
+    private fun openFilePicker() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "*/*"
+
+        startActivityForResult(intent, PICK_FILE_REQUEST_CODE)
+    }
+    private fun getFileType(uri: Uri): String {
+        val contentResolver = contentResolver
+        val mimeType = contentResolver.getType(uri)
+
+        return when {
+            mimeType?.contains("pdf") == true -> "PDF"
+            mimeType?.contains("spreadsheetml") == true -> "Excel"
+            mimeType?.contains("wordprocessingml") == true -> "Word"
+            mimeType?.contains("presentationml") == true -> "PowerPoint"
+            else -> "Unknown"
+        }
+    }
+
 
     private fun applyJob(
         editEmail: String,
