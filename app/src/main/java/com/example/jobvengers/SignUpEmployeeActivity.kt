@@ -22,8 +22,6 @@ class SignUpEmployeeActivity : AppCompatActivity(), Callback<ApiResponse> {
     private val requestContract: IRequestContact =
         retrofitClient.create(IRequestContact::class.java)
 
-    private val  jobType = arrayListOf("Android","Java")
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +44,7 @@ class SignUpEmployeeActivity : AppCompatActivity(), Callback<ApiResponse> {
                         username = editTextName.text.toString(),
                         password = editTextPassword.text.toString(),
                         email = editTextEmail.text.toString(),
-                        field_Of_interest = arrayListOf("Banking"),
+                        field_Of_interest = editTextInterest.text.toString(),
                         phone_no = editTetPhoneNumber.text.toString(),
                     )
                     val response = requestContract.makeApiCall(data)

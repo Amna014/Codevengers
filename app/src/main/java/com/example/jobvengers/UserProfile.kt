@@ -56,9 +56,9 @@ class UserProfile : AppCompatActivity(), Callback<ApiResponse> {
         Log.d("JobVengerLog", response.body()?.responseCode.toString())
         if (response.body()?.responseCode == 200) {
             binding.apply {
-                Name.text = response.body()?.user?.username
-                Email.text = response.body()?.user?.email
-                Position.text = response.body()?.user?.field_Of_interest?.first() ?: "Developer"
+                Name.text = response.body()?.employee?.username
+                Email.text = response.body()?.employee?.email
+                Position.text = response.body()?.employee?.field_of_interest
             }
         } else {
             if (!isFinishing) {

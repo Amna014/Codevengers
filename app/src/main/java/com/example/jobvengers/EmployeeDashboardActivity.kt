@@ -2,10 +2,13 @@ package com.example.jobvengers
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.os.postDelayed
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -106,7 +109,6 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
                 if (selectedTab == "Jobs") {
                     val searchQuery = text?.toString()?.trim()
                     val allJobs: List<Jobs> = jobs
-                    Log.d("oiusodus", allJobs.toString())
 
                     val filteredJobs = if (!searchQuery.isNullOrBlank()) {
                         allJobs.filter {
@@ -151,20 +153,23 @@ class EmployeeDashboardActivity : AppCompatActivity(), Callback<ApiResponse> {
     private fun setUserRecyclerView(dataList: List<User>?) {
         userAdapter = UserListingAdapter(dataList ?: arrayListOf(), object : SendConnection {
             override fun sendConnection(id: Int) {
-                Toast.makeText(this@EmployeeDashboardActivity, id.toString(), Toast.LENGTH_SHORT)
-                    .show()
-                val data = ApiRequest(
-                    action = "SEND_CONNECTION_REQUEST",
-                    sender_id = appPreferences.getUserId().toInt(),
-                    receiver_id = id,
-                )
-                val response = requestContract.makeApiCall(data)
-                response.enqueue(this@EmployeeDashboardActivity)
+               sendConnectionRequest(id)
+               sendConnectionRequest(id)
             }
 
         })
         binding.recyclerView.adapter = userAdapter
         binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
+    }
+
+    private fun sendConnectionRequest(id: Int) {
+        val data = ApiRequest(
+            action = "SEND_CONNECTION_REQUEST",
+            sender_id = appPreferences.getUserId().toInt(),
+            receiver_id = id,
+        )
+        val response = requestContract.makeApiCall(data)
+        response.enqueue(this@EmployeeDashboardActivity)
     }
 
     private fun openWhatsAppSendToScreen() {

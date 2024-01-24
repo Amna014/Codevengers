@@ -12,7 +12,7 @@ data class ApiRequest(
     val employer_id: Int? = null,
     val job_seeker_id: Int? = null,
     val job_id: Int? = null,
-    val field_Of_interest: ArrayList<String>? = null,
+    val field_Of_interest: String? = null,
     val phone_no: String? = null,
     val sender_id: Int? = null,
     val receiver_id: Int? = null,
@@ -34,6 +34,7 @@ data class ApiResponse(
     val user: User? = null,
     val jobs: ArrayList<Jobs>? = null,
     val data: ArrayList<User>? = null,
+    val employee: User? = null,
     val applied_users: AppliedUserData,
 )
 
@@ -60,6 +61,6 @@ data class User(
     val username: String? = null,
     val email: String? = null,
     val phone_no: String? = null,
-    val field_Of_interest: ArrayList<String>? = null,
+    val field_of_interest: String? = null,
     val connection_status: String? = null,
 )
