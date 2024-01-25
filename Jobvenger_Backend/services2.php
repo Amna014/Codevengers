@@ -15,10 +15,11 @@ if (isset($request->action)) {
             $response = sendConnectionRequest($request);
             break;
 
-        case 'ACCEPT_CONNECTION_REQUEST':
-            $response = acceptConnectionRequest($request);
+        case 'GET_ALL_APPLIED_USERS':
+            $response = getAllAppliedUsersInMyJobs($request);
             break;
-       case 'GET_ALL_JOB_SEEKERS':
+        
+        case 'GET_ALL_JOB_SEEKERS':
             $response = getAllJobSeekers();
             break;
 
@@ -61,18 +62,22 @@ function sendConnectionRequest($request)
 
         try {
             // Check if there is an existing pending connection request
-            $existingRequestStmt = $pdo->prepare("SELECT * FROM connections WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) AND status = 'pending'");
-            $existingRequestStmt->execute([$senderId, $receiverId, $receiverId, $senderId]);
+            $existingRequestStmt = $pdo->prepare("SELECT * FROM connections WHERE (sender_id = ? AND receiver_id = ?) AND status = 'pending'");
+            $existingRequestStmt->execute([$senderId, $receiverId]);
 
             if ($existingRequestStmt->rowCount() > 0) {
+                // Automatically accept the connection request
+                $acceptStmt = $pdo->prepare("UPDATE connections SET status = 'accepted', date_connected = NOW() WHERE sender_id = ? AND receiver_id = ? AND status = 'pending'");
+                $acceptStmt->execute([$senderId, $receiverId]);
+
                 return [
-                    'status' => false,
-                    'responseCode' => 400,
-                    'message' => "Connection request already exists",
+                    'status' => true,
+                    'responseCode' => 200,
+                    'message' => "Connection request accepted automatically",
                 ];
             }
 
-            // Attempt to insert the connection request into the 'connections' table
+            // No existing request, send a new connection request
             $stmt = $pdo->prepare("INSERT INTO connections (sender_id, receiver_id, status, date_connected) VALUES (?, ?, 'pending', NOW())");
             $stmt->execute([$senderId, $receiverId]);
 
@@ -86,7 +91,7 @@ function sendConnectionRequest($request)
             return [
                 'status' => false,
                 'responseCode' => 500,
-                'message' => "Error sending connection request: " . $e->getMessage(),
+                'message' => "Error sending/accepting connection request: " . $e->getMessage(),
             ];
         }
     } else {
@@ -98,45 +103,17 @@ function sendConnectionRequest($request)
     }
 }
 
-function acceptConnectionRequest($request)
-{
-    global $pdo;
-
-    if (isset($request->action, $request->connection_id) && $request->action === 'ACCEPT_CONNECTION_REQUEST') {
-        $connectionId = $request->connection_id;
-
-        try {
-            // Update the status of the connection to 'accepted'
-            $stmt = $pdo->prepare("UPDATE connections SET status = 'accepted' WHERE connection_id = ?");
-            $stmt->execute([$connectionId]);
-
-            return [
-                'status' => true,
-                'responseCode' => 200,
-                'message' => "Connection request accepted successfully",
-            ];
-        } catch (PDOException $e) {
-            // Handle the exception (print or log the error, return an error response, etc.)
-            return [
-                'status' => false,
-                'responseCode' => 500,
-                'message' => "Error accepting connection request: " . $e->getMessage(),
-            ];
-        }
-    } else {
-        return [
-            'status' => false,
-            'responseCode' => 400,
-            'message' => "Invalid or missing parameters for connection acceptance",
-        ];
-    }
-}
 function getAllJobSeekers()
 {
     global $pdo;
 
     try {
-        $stmt = $pdo->prepare("SELECT username, field_of_interest, phone_no FROM job_seekers");
+        // Fetch all job seekers along with their connection status
+        $stmt = $pdo->prepare("
+            SELECT js.job_seeker_id, js.username, js.field_of_interest, js.phone_no, c.status as connection_status
+            FROM job_seekers js
+            LEFT JOIN connections c ON js.job_seeker_id = c.sender_id
+        ");
         $stmt->execute();
 
         $jobSeekers = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -145,7 +122,7 @@ function getAllJobSeekers()
             'status' => true,
             'responseCode' => 200,
             'data' => $jobSeekers,
-            'message' => "Job seekers' usernames, fields of interest, and phone numbers retrieved successfully",
+            'message' => "Job seekers' IDs, usernames, fields of interest, phone numbers, and connection status retrieved successfully",
         ];
     } catch (PDOException $e) {
         return [
@@ -189,42 +166,27 @@ function getEmployerJobs($request)
         ];
     }
 }
-
 function getSimilarJobs($request)
 {
     global $pdo;
 
     if (
-        isset($request->action, $request->job_seeker_id)
+        isset($request->action, $request->job_seeker_id, $request->field_of_interest)
         && $request->action === 'GET_SIMILAR_JOBS'
     ) {
         $jobSeekerId = $request->job_seeker_id;
+        $fieldOfInterest = $request->field_of_interest;
 
         try {
-            // Fetch the job seeker's field of interest
-            $fieldOfInterestStmt = $pdo->prepare("SELECT field_of_interest FROM job_seekers WHERE job_seeker_id = ?");
-            $fieldOfInterestStmt->execute([$jobSeekerId]);
-            $fieldOfInterestResult = $fieldOfInterestStmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$fieldOfInterestResult || !$fieldOfInterestResult['field_of_interest']) {
-                return [
-                    'status' => false,
-                    'responseCode' => 404,
-                    'message' => 'Job seeker not found or field of interest not specified',
-                    'data' => [],
-                ];
-            }
-
-            $fieldOfInterest = json_decode($fieldOfInterestResult['field_of_interest']);
-
             // Fetch similar jobs based on the job seeker's field of interest
-            $fieldString = implode(',', array_fill(0, count($fieldOfInterest), '?'));
+            $fieldArray = explode(',', $fieldOfInterest);
+            $fieldString = implode(',', array_fill(0, count($fieldArray), '?'));
             $similarJobsStmt = $pdo->prepare("
                 SELECT * 
                 FROM jobs 
                 WHERE FIND_IN_SET(title, $fieldString)
             ");
-            $similarJobsStmt->execute($fieldOfInterest);
+            $similarJobsStmt->execute($fieldArray);
             $similarJobs = $similarJobsStmt->fetchAll(PDO::FETCH_ASSOC);
 
             return [
@@ -249,7 +211,57 @@ function getSimilarJobs($request)
             'data' => [],
         ];
     }
-}   
+}
+function getAllAppliedUsersInMyJobs($request)
+{
+    global $pdo;
+
+    if (
+        isset($request->action, $request->employer_id)
+        && $request->action === 'GET_ALL_APPLIED_USERS'
+    ) {
+        $employerId = $request->employer_id;
+
+        try {
+            // Fetch all jobs owned by the employer
+            $employerJobsStmt = $pdo->prepare("SELECT job_id FROM jobs WHERE employer_id = ?");
+            $employerJobsStmt->execute([$employerId]);
+            $employerJobs = $employerJobsStmt->fetchAll(PDO::FETCH_COLUMN);
+
+            // Fetch users who have applied to the jobs owned by the employer along with connection status
+            $appliedUsersStmt = $pdo->prepare("
+                SELECT js.job_seeker_id, js.username, js.email, js.phone_no, c.status as connection_status
+                FROM job_seekers js
+                JOIN applications app ON js.job_seeker_id = app.job_seeker_id
+                LEFT JOIN connections c ON js.job_seeker_id = c.sender_id
+                WHERE app.job_id IN (" . implode(',', $employerJobs) . ")
+            ");
+            $appliedUsersStmt->execute();
+            $appliedUsers = $appliedUsersStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return [
+                'status' => true,
+                'responseCode' => 200,
+                'data' => $appliedUsers,
+                'message' => 'Applied users retrieved successfully',
+            ];
+        } catch (PDOException $e) {
+            return [
+                'status' => false,
+                'responseCode' => 500,
+                'message' => 'Error retrieving applied users: ' . $e->getMessage(),
+                'data' => [],
+            ];
+        }
+    } else {
+        return [
+            'status' => false,
+            'responseCode' => 400,
+            'message' => 'Invalid or missing parameters for getting applied users',
+            'data' => [],
+        ];
+    }
+}
 function getAllJobs($request)
 {
     global $pdo;
@@ -287,6 +299,4 @@ function getAllJobs($request)
         ];
     }
 }
-
-
-
+?>

@@ -53,8 +53,6 @@ if (isset($request->action)) {
 
 echo json_encode($response);
 
-
-
 function registerEmployer($request)
 {
     global $pdo;
@@ -107,7 +105,6 @@ function registerEmployer($request)
     }
 }
 
-
 function registerJobSeeker($request)
 {
     global $pdo;
@@ -119,7 +116,7 @@ function registerJobSeeker($request)
         $username = $request->username;
         $email = $request->email;
         $password = password_hash($request->password, PASSWORD_DEFAULT);
-        $fieldOfInterest = isset($request->field_of_interest) ? json_encode($request->field_of_interest) : null;
+        $fieldOfInterest = isset($request->field_of_interest) ? $request->field_of_interest : null;
         $phoneNo = isset($request->phone_no) ? $request->phone_no : null;
 
         try {
@@ -161,8 +158,6 @@ function registerJobSeeker($request)
     }
 }
 
-
-    
 function createJob($request)
 {
     global $pdo;
@@ -230,41 +225,62 @@ function applyJob($request)
         $phoneNo = $request->phone_no;
         $experience = $request->experience;
         $expectedSalary = $request->expected_salary;
-        $cvPath = $request->cv; // Added cv parameter
+        $cvPath = $request->cv;
 
-        // Check if the job exists
-        $jobStmt = $pdo->prepare("SELECT * FROM jobs WHERE job_id = ?");
-        $jobStmt->execute([$jobId]);
-        $job = $jobStmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            // Check if the job exists
+            $jobStmt = $pdo->prepare("SELECT * FROM jobs WHERE job_id = ?");
+            $jobStmt->execute([$jobId]);
+            $job = $jobStmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($job) {
-            // Check if the job seeker has already applied for the job
-            $existingAppStmt = $pdo->prepare("SELECT * FROM applications WHERE job_seeker_id = ? AND job_id = ?");
-            $existingAppStmt->execute([$jobSeekerId, $jobId]);
-            $existingApplication = $existingAppStmt->fetch(PDO::FETCH_ASSOC);
+            if ($job) {
+                // Check if the job seeker has already applied for the job
+                $existingAppStmt = $pdo->prepare("SELECT * FROM applications WHERE job_seeker_id = ? AND job_id = ?");
+                $existingAppStmt->execute([$jobSeekerId, $jobId]);
+                $existingApplication = $existingAppStmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($existingApplication) {
+                if ($existingApplication) {
+                    return [
+                        'status' => false,
+                        'responseCode' => 400,
+                        'message' => "Job seeker has already applied for this job",
+                    ];
+                }
+
+                // Begin a transaction to ensure data consistency
+                $pdo->beginTransaction();
+
+                // Apply for the job
+                $applyStmt = $pdo->prepare("INSERT INTO applications (job_id, job_seeker_id, email, phone_no, experience, expected_salary, cv) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $applyStmt->execute([$jobId, $jobSeekerId, $email, $phoneNo, $experience, $expectedSalary, $cvPath]);
+
+                // Update the applied_count column in the jobs table
+                $updateAppliedCountStmt = $pdo->prepare("UPDATE jobs SET applied_count = applied_count + 1 WHERE job_id = ?");
+                $updateAppliedCountStmt->execute([$jobId]);
+
+                // Commit the transaction
+                $pdo->commit();
+
+                return [
+                    'status' => true,
+                    'responseCode' => 200,
+                    'message' => "Job application submitted successfully",
+                ];
+            } else {
                 return [
                     'status' => false,
-                    'responseCode' => 400,
-                    'message' => "Job seeker has already applied for this job",
+                    'responseCode' => 404,
+                    'message' => "Job not found",
                 ];
             }
+        } catch (PDOException $e) {
+            // Rollback the transaction in case of an error
+            $pdo->rollBack();
 
-            // Apply for the job
-            $applyStmt = $pdo->prepare("INSERT INTO applications (job_id, job_seeker_id, email, phone_no, experience, expected_salary, cv) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $applyStmt->execute([$jobId, $jobSeekerId, $email, $phoneNo, $experience, $expectedSalary, $cvPath]);
- 
-            return [
-                'status' => true,
-                'responseCode' => 200,
-                'message' => "Job application submitted successfully",
-            ];
-        } else {
             return [
                 'status' => false,
-                'responseCode' => 404,
-                'message' => "Job not found",
+                'responseCode' => 500,
+                'message' => "Error applying to the job: " . $e->getMessage(),
             ];
         }
     } else {
@@ -275,11 +291,6 @@ function applyJob($request)
         ];
     }
 }
-        
-
-    
-
-
 function loginUser($request)
 {
     global $pdo;
@@ -360,47 +371,67 @@ function loginUser($request)
         ];
     }
 }
-
-
-
 function getAppliedUsersInMyJob($request)
 {
     global $pdo;
 
     if (
-        isset($request->action, $request->employer_id)
+        isset($request->action, $request->employer_id, $request->job_id)
         && $request->action === 'GET_APPLIED_USERS'
     ) {
         $employerId = $request->employer_id;
+        $jobId = $request->job_id;
 
         try {
-            // Fetch all jobs owned by the employer
-            $employerJobsStmt = $pdo->prepare("SELECT job_id FROM jobs WHERE employer_id = ?");
-            $employerJobsStmt->execute([$employerId]);
-            $employerJobs = $employerJobsStmt->fetchAll(PDO::FETCH_COLUMN);
+            // Check if the employer owns the job
+            $ownershipStmt = $pdo->prepare("SELECT * FROM jobs WHERE employer_id = ? AND job_id = ?");
+            $ownershipStmt->execute([$employerId, $jobId]);
 
-            // Fetch users who have applied to the jobs owned by the employer
+            if ($ownershipStmt->rowCount() === 0) {
+                return [
+                    'status' => false,
+                    'responseCode' => 403,
+                    'message' => 'Permission denied. Employer does not own the specified job.',
+                    'applied_users' => [],
+                    'applied_users_count' => 0,
+                ];
+            }
+
+            // Fetch applied count from the jobs table
+            $appliedCountStmt = $pdo->prepare("SELECT applied_count FROM jobs WHERE job_id = ?");
+            $appliedCountStmt->execute([$jobId]);
+            $appliedCount = $appliedCountStmt->fetchColumn();
+
+            // Fetch users who have applied to the specified job
             $appliedUsersStmt = $pdo->prepare("
                 SELECT js.job_seeker_id, js.username, js.email, js.phone_no
                 FROM job_seekers js
                 JOIN applications app ON js.job_seeker_id = app.job_seeker_id
-                WHERE app.job_id IN (" . implode(',', $employerJobs) . ")
+                WHERE app.job_id = ?
             ");
-            $appliedUsersStmt->execute();
+            $appliedUsersStmt->execute([$jobId]);
             $appliedUsers = $appliedUsersStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Count of users who have applied
+            $appliedUsersCount = count($appliedUsers);
 
             return [
                 'status' => true,
                 'responseCode' => 200,
-                'data' => $appliedUsers,
-                'message' => 'Applied users retrieved successfully',
+                'applied_users' => [
+                    'users' => $appliedUsers,
+                    'count' => $appliedUsersCount,
+                ],
+                'applied_users_count' => $appliedCount,
+                'message' => 'Applied users for the specified job retrieved successfully',
             ];
         } catch (PDOException $e) {
             return [
                 'status' => false,
                 'responseCode' => 500,
                 'message' => 'Error retrieving applied users: ' . $e->getMessage(),
-                'data' => [],
+                'applied_users' => [],
+                'applied_users_count' => 0,
             ];
         }
     } else {
@@ -408,11 +439,11 @@ function getAppliedUsersInMyJob($request)
             'status' => false,
             'responseCode' => 400,
             'message' => 'Invalid or missing parameters for getting applied users',
-            'data' => [],
+            'applied_users' => [],
+            'applied_users_count' => 0,
         ];
     }
 }
-
 
 function getUserById($request)
 {
@@ -460,7 +491,7 @@ function getUserById($request)
             return [
                 'status' => true,
                 'responseCode' => 200,
-                'user' => $user,
+                'employee' => $user,
                 'message' => 'User retrieved successfully',
             ];
         } catch (PDOException $e) {
@@ -478,6 +509,8 @@ function getUserById($request)
         ];
     }
 }
+
+
 
 ?>
 
