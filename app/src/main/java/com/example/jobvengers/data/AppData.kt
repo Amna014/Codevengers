@@ -30,7 +30,7 @@ data class ApiRequest(
 data class ApiResponse(
     val status: Boolean,
     val responseCode: Int,
-    val message: String,
+    val message: String? = "Error",
     val user: User? = null,
     val jobs: ArrayList<Jobs>? = null,
     val data: ArrayList<User>? = null,

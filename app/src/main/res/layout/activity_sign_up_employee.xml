@@ -200,7 +200,7 @@
                 android:textSize="@dimen/font_4x" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/signupNow"
+                android:id="@+id/loginNow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/urbanist_bold"

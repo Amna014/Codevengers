@@ -3,6 +3,7 @@ package com.example.jobvengers
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.jobvengers.data.ApiRequest
@@ -41,13 +42,25 @@ class UserProfile : AppCompatActivity(), Callback<ApiResponse> {
     }
 
     private fun getUserById() {
-        val data = ApiRequest(
-            action = "GET_USER_BY_ID",
-            user_id = appPreferences.getUserId().toInt(),
+        if (appPreferences.getUserType() == "job_seeker"){
+            val data = ApiRequest(
+                action = "GET_USER_BY_ID",
+                user_id = appPreferences.getUserId().toInt(),
 
-            )
-        val response = requestContract.makeApiCall(data)
-        response.enqueue(this@UserProfile)
+                )
+            val response = requestContract.makeApiCall(data)
+            response.enqueue(this@UserProfile)
+        }else{
+            binding.Position.visibility = View.GONE
+            val data = ApiRequest(
+                action = "GET_EMPLOYER_BY_ID",
+                user_id = appPreferences.getUserId().toInt(),
+
+                )
+            val response = requestContract.makeApiCall(data)
+            response.enqueue(this@UserProfile)
+        }
+
     }
 
 
@@ -57,9 +70,17 @@ class UserProfile : AppCompatActivity(), Callback<ApiResponse> {
         Log.d("JobVengerLog", response.body()?.employee.toString())
         if (response.body()?.responseCode == 200) {
             binding.apply {
-                Name.text = response.body()?.employee?.username
-                Email.text = response.body()?.employee?.email
-                Position.text = response.body()?.employee?.field_of_interest ?: "Android"
+                if (response.body()?.employee != null){
+                    Name.text = response.body()?.employee?.username
+                    Email.text = response.body()?.employee?.email
+                }
+                if (response.body()?.user != null){
+                    Name.text = response.body()?.user?.username
+                    Email.text = response.body()?.user?.email
+                    Position.text = response.body()?.user?.field_of_interest ?: "Android"
+                }
+
+
             }
         } else {
             if (!isFinishing) {

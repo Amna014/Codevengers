@@ -57,6 +57,11 @@ class SignUpEmployeeActivity : AppCompatActivity(), Callback<ApiResponse> {
                     ).show()
                 }
             }
+            loginNow.setOnClickListener {
+                val intent = Intent(this@SignUpEmployeeActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
     }
 
